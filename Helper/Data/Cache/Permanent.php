@@ -65,12 +65,21 @@ class Permanent extends \Ess\M2ePro\Helper\Data\Cache\AbstractHelper
             $preparedTags[] = \Ess\M2ePro\Helper\Data::CUSTOM_IDENTIFIER.'_'.$tag;
         }
 
-        $this->cache->save(
-            \Zend\Serializer\Serializer::getDefaultAdapter()->serialize($value),
-            $cacheKey,
-            $preparedTags,
-            (int)$lifeTime
-        );
+        if (version_compare($this->getHelper('Magento')->getVersion(), '2.3.5', '>=')) {
+            $this->cache->save(
+                \Laminas\Serializer\Serializer::getDefaultAdapter()->serialize($value),
+                $cacheKey,
+                $preparedTags,
+                (int)$lifeTime
+            );
+        } else {
+            $this->cache->save(
+                \Zend\Serializer\Serializer::getDefaultAdapter()->serialize($value),
+                $cacheKey,
+                $preparedTags,
+                (int)$lifeTime
+            );
+        }
     }
 
     //########################################
